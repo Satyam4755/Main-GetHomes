@@ -65,24 +65,17 @@ exports.postAddHome = async (req, res) => {
     const { id, Name, Type, Price, Location, Description, Rating } = req.body;
     const files = req.files;
 
-    // Show spinner when the request is being processed
-    res.locals.showSpinner = true;
-
     if (!files || !files.image || !files.rules) {
         console.log("One or more required files are missing or not valid");
-        return res.redirect('/host/addHomes');
+        return res.status(400).json({ success: false, message: "Missing image or rules file" });
     }
 
-    let imageResult, pdfResult;
-
     try {
-        // Use buffer instead of file path
         const imageBuffer = files.image[0].buffer;
         const pdfBuffer = files.rules[0].buffer;
 
-        // Call Cloudinary to upload files
-        imageResult = await fileUploadInCloudinary(imageBuffer);
-        pdfResult = await fileUploadInCloudinary(pdfBuffer, { resource_type: 'raw' });
+        const imageResult = await fileUploadInCloudinary(imageBuffer);
+        const pdfResult = await fileUploadInCloudinary(pdfBuffer, { resource_type: 'raw' });
 
         if (!imageResult?.secure_url || !pdfResult?.secure_url) {
             throw new Error("Cloudinary upload failed");
@@ -104,35 +97,31 @@ exports.postAddHome = async (req, res) => {
         });
 
         await Home.save();
-        res.redirect('/host/admin_HomeList');
+
+        return res.status(200).json({ success: true, message: "Home added successfully" });
     } catch (err) {
-        console.log("Error during home upload:", err.message);
-        res.redirect('/host/addHomes');
-    } finally {
-        // Hide spinner when done
-        res.locals.showSpinner = false;
+        console.error("Error during home upload:", err.message);
+        return res.status(500).json({ success: false, message: "Internal server error: " + err.message });
     }
 };
 
 // Post edit home
 
 exports.PosteditHome = async (req, res) => {
-    const { Name, Type, Price, Location, Description, Rating } = req.body;
-    const homeId = req.body.id;
+    const { Name, Type, Price, Location, Description, Rating, id: homeId } = req.body;
     const files = req.files;
 
     try {
         const home = await homes.findById(homeId);
         if (!home || home.host.toString() !== req.session.user._id.toString()) {
-            console.log("Unauthorized");
-            return res.status(403).send("<h1>Unauthorized</h1>");
+            return res.status(403).json({ success: false, message: "Unauthorized to edit this home" });
         }
 
         // ✅ IMAGE update
-        if (files && files.image) {
+        if (files?.image) {
             if (home.imagePublicId) {
                 await cloudinary.uploader.destroy(home.imagePublicId).catch(err => {
-                    console.log("Error while deleting image from Cloudinary:", err.message);
+                    console.warn("Error deleting old image:", err.message);
                 });
             }
 
@@ -148,10 +137,10 @@ exports.PosteditHome = async (req, res) => {
         }
 
         // ✅ PDF update
-        if (files && files.rules) {
+        if (files?.rules) {
             if (home.rulesPublicId) {
                 await cloudinary.uploader.destroy(home.rulesPublicId, { resource_type: 'raw' }).catch(err => {
-                    console.log("Error while deleting PDF from Cloudinary:", err.message);
+                    console.warn("Error deleting old PDF:", err.message);
                 });
             }
 
@@ -175,11 +164,11 @@ exports.PosteditHome = async (req, res) => {
         home.Rating = Rating;
 
         await home.save();
-        res.redirect('/host/admin_HomeList');
+        return res.status(200).json({ success: true, message: "Home updated successfully" });
 
     } catch (error) {
-        console.log("Error during post edit:", error.message);
-        res.redirect('/host/admin_HomeList');
+        console.error("Error during home update:", error.message);
+        return res.status(500).json({ success: false, message: "Internal server error: " + error.message });
     }
 };
 // dikkat in postEdithomes
