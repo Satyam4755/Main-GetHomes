@@ -1,6 +1,6 @@
 // utils/fileUploader.js
 const cloudinary = require('cloudinary').v2;
-const fs = require('fs');
+const streamifier = require('streamifier');
 
 cloudinary.config({ 
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
@@ -8,24 +8,26 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET 
 });
 
-const fileUploadInCloudinary = async (localFile) => {
-  try {
-    if (!localFile) return null;
+const fileUploadInCloudinary = (buffer, options = {}) => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        resource_type: options.resource_type || 'auto',
+        access_mode: 'public'
+      },
+      (error, result) => {
+        if (result) {
+          console.log("File uploaded successfully:", result.secure_url);
+          resolve(result);
+        } else {
+          console.error("Cloudinary upload error:", error);
+          reject(error);
+        }
+      }
+    );
 
-    // Check extension
-    const isPDF = localFile.endsWith('.pdf');
-
-    const response = await cloudinary.uploader.upload(localFile, {
-      resource_type: 'auto',
-      access_mode: 'public', // ✅ Make PDF public
-    });
-
-    console.log("File uploaded successfully", response.url);
-    return response;
-  } catch (error) {
-    fs.unlinkSync(localFile);
-    return null;
-  }
+    streamifier.createReadStream(buffer).pipe(stream);
+  });
 };
 
-module.exports = {fileUploadInCloudinary} ;
+module.exports = { fileUploadInCloudinary };
