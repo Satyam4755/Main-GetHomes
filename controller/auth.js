@@ -4,8 +4,6 @@ const bcrypt = require("bcryptjs");
 exports.LoginPage = (req, res, next) => {
     // registerHomes ka variable me, find() ko call karenge
     const { email, password } = req.body;
-    console.log(req.body)
-    console.log(req.isLogedIn);
     res.render('./store/logIn', { title: "Log Page" ,
         currentPage:'logIn',
         isLogedIn:req.isLogedIn,
