@@ -1,0 +1,10 @@
+const express=require('express')
+const authRouter=express.Router()
+// const {registerHomes}=require('./host')
+const auth=require('../controller/auth')
+authRouter.get('/logIn',auth.LoginPage)
+authRouter.post('/logIn',auth.PostLogin)
+authRouter.post('/logout',auth.PostLogout)
+authRouter.get('/signUP',auth.getSignUpPage)
+authRouter.post('/signUP',auth.postSignUpPage)
+module.exports=authRouter;

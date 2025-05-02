@@ -1,0 +1,215 @@
+<%- include('../partials/head') %>
+
+<%-include('../partials/background')%>
+<style> 
+    .home-details-container {
+        max-width: 500px; /* Reduced from 720px */
+        margin: 40px auto;
+        padding: 18px;
+        border-radius: 14px;
+        background: white;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    
+
+    .home-image {
+        width: 100%;
+        aspect-ratio: 9/6;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 20px;
+    }
+
+    .home-content {
+        padding: 16px 8px;
+    }
+
+    .home-content h2 {
+        font-size: 22px;
+        margin-bottom: 8px;
+        color: #2d3748;
+        text-align: center;
+    }
+
+    .home-content p {
+        margin: 6px 0;
+        font-size: 14px;
+        color: #444;
+    }
+
+    .label {
+        font-weight: 600;
+        color: #555;
+    }
+
+    .rating-badge {
+        display: inline-block;
+        background: #ffeaa7;
+        color: #d35400;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 13px;
+    }
+
+    .description-box {
+        margin-top: 16px;
+        background: #f4f4f4;
+        padding: 12px;
+        border-left: 4px solid #6c5ce7;
+        border-radius: 8px;
+        font-style: italic;
+        font-size: 14px;
+    }
+
+    .action-buttons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .btn {
+        background: #6c5ce7;
+        color: white;
+        border: none;
+        border-radius: 7px;
+        padding: 8px 18px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        background: #5942d0;
+    }
+
+    .fav-btn img {
+        width: 30px;
+        height: 30px;
+        transition: transform 0.3s ease;
+    }
+
+    .fav-btn img:hover {
+        transform: scale(1.1);
+        filter: drop-shadow(0 0 5px red);
+    }
+    #favImg1{
+        width: 30px;
+        height: 30px;
+        filter:grayscale(10)
+    }
+    #favImg2{ 
+        width: 30px;
+        height: 30px;
+    }
+    #favImg1:hover{
+        box-shadow: 0 4px 8px red;
+        filter:grayscale(0)
+    }
+    #favImg2:hover{
+        box-shadow: 0 4px 8px red;
+        filter:grayscale(10)
+    }
+
+    .back-btn {
+        background-color: #ff4d6d;
+        margin: 25px auto 0;
+        display: block;
+        text-align: center;
+    }
+
+    @media (max-width: 600px) {
+        .home-details-container {
+            margin: 20px 10px;
+            padding: 14px;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            text-align: center;
+        }
+
+        .home-content h2 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div class="home-details-container">
+    <div class="home-image-wrapper">
+        <img class="home-image" src="<%= home.image %>" alt="Home Image">
+    </div>
+
+    <div class="home-content">
+        <h2><%= home.Name %></h2>
+        <p><span class="label">Type:</span> <%= home.Type %></p>
+        <p><span class="label">Location:</span> <%= home.Location %></p>
+        <p><span class="label">Price per night:</span> ₹<%= home.Price %></p>
+        <p><span class="label">Rating:</span> 
+            <span class="rating-badge">
+                <% for (let i = 1; i <= home.Rating; i++) { %>⭐<% } %>
+                (<%= home.Rating %>/5)
+            </span>
+        </p>
+        <a href="<%=home.rules %>">Download Rules PDF</a>
+        <div class="description-box">
+            <%= home.Description %>
+        </div>
+
+        <div class="action-buttons">
+            <% if (showOptions) { %>
+                <a href="/user/booking/<%= home._id %>">
+                    <button class="btn">Reserve Now</button>
+                </a>
+
+                <form action="/user/favourite_list" method="post" class="fav-btn">
+                    <input type="hidden" name="homeId" value="<%= home._id %>">
+                    <form action="/user/favourite_list" method="post" class="fav-btn">
+                        <input type="hidden" name="homeId" value="<%= home._id %>">
+                        <% if(opacity[home._id] == 10) { %>
+                            <button type="submit" style="background: none; border: none;">
+                                <img id="favImg2" style=" border-radius: 15px;" src="/pngtree-red-3d-heart-emoji-realistic-shadow-png-image_4539964.png" alt="Favourite">
+                            </button>
+                        <% } else { %>
+                            <button type="submit" style="background: none; border: none;">
+                                <img id="favImg1" style=" border-radius: 15px;" src="/pngtree-red-3d-heart-emoji-realistic-shadow-png-image_4539964.png" alt="Favourite">
+                            </button>
+                        <% } %>
+                    </form>
+                </form>
+            <% } else if (!isLogedIn) { %>
+                <a href="/logIn">
+                    <button class="btn">Login to Reserve</button>
+                </a>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<a href="/" style="
+        text-decoration: none ;">
+    <button class="btn back-btn">Go Back To Home</button>
+</a>
+
+</body>
+</html> 

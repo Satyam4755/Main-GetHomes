@@ -1,0 +1,249 @@
+<%- include('../partials/head') %>
+<%- include('../partials/background') %>
+<style> 
+  .headings {
+    margin: 10px auto 20px auto;
+    text-align: center;
+    background: linear-gradient(135deg, #fdfcfb, #e2d1c3);
+    padding: 20px 25px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 40%;
+    max-height: 7%;
+  }
+
+  .headings h1 {
+    font-size: 2em;
+    color: #2c3e50;
+    margin: 0;
+  }
+
+  .headings h2 {
+    font-size: 1.2em;
+    color: #7f8c8d;
+    margin-top: 10px;
+    font-weight: 500;
+  }
+
+  .mainDabba {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+    margin-top: 5px;
+    margin-bottom: 60px; /* Added to prevent clipping */
+    animation: fadeIn 1s ease;
+  }
+
+  .cards-container,
+  .booking-cards-container {
+    flex: 1 1 320px;
+    max-width: 420px;
+  }
+
+  .card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.4s ease, box-shadow 0.3s ease;
+  }
+
+  .card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.2);
+  }
+
+  .card img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .card:hover img {
+    transform: scale(1.05);
+  }
+
+  .content {
+    padding: 15px;
+  }
+
+  .content h3 {
+    color: #ff4e74;
+    margin-bottom: 8px;
+    font-size: 1.3em;
+  }
+
+  .content p {
+    margin: 5px 0;
+    color: #555;
+    font-size: 0.95em;
+  }
+
+  form {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    animation: fadeInUp 1s ease;
+  }
+
+  form h2 {
+    text-align: center;
+    color: #ff4e74;
+    margin-bottom: 20px;
+    font-size: 1.4em;
+  }
+
+  label {
+    font-weight: 500;
+    display: block;
+    margin-bottom: 6px;
+    color: #333;
+  }
+
+  input, select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 14px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    transition: border-color 0.3s ease;
+    font-family: inherit;
+    font-size: 0.95em;
+  }
+
+  input:focus, select:focus {
+    border-color: #ff4e74;
+    outline: none;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    background-color: #ff4e74;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+
+  button:hover {
+    background-color: #e53963;
+    transform: scale(1.05);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    .mainDabba {
+      flex-direction: column;
+      padding: 15px;
+    }
+
+    .headings {
+      padding: 15px 20px;
+    }
+
+    .cards-container,
+    .booking-cards-container {
+      max-width: 100%;
+    }
+  }
+
+  body {
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+</style>
+
+<%- include('../partials/nav') %>
+
+<div class="headings">
+  <h1>🎉 Welcome Back, Adventurer!</h1>
+  <h2>Your Journey Awaits – Here Are Your Booking Details 🧳</h2>
+</div>
+
+<div class="mainDabba">
+  <div class="cards-container">
+    <div class="card">
+      <a id="link" href="/user/home-list/<%=home._id %>" style="text-decoration: none; color: black;">
+        <img src="<%= home.image %>" alt="Home Image">
+        <div class="content">
+          <h3><%= home.Name %></h3>
+          <p><strong>Type:</strong> <%= home.Type %></p>
+          <p><strong>Price per night:</strong> ₹<%= home.Price %></p>
+          <p><strong>Location:</strong> <%= home.Location %></p>
+          <p><strong>Ratings:</strong>
+            <% for(let i=1;i<=home.Rating;i++){%> ⭐ <% } %>
+          </p>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div class="booking-cards-container">
+    <form action="/user/submit_booking/<%=home._id%>" method="post">
+      <h2>Home Booking</h2>
+
+      <div>
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+      </div>
+
+      <div>
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" pattern="[0-9]{10}" required>
+      </div>
+
+      <div>
+        <label for="checkin">Check-in Date</label>
+        <input type="date" id="checkin" name="checkin" required>
+      </div>
+
+      <div>
+        <label for="checkout">Check-out Date</label>
+        <input type="date" id="checkout" name="checkout" required>
+      </div>
+
+      <div>
+        <label for="payment">Payment Method</label>
+        <select id="payment" name="payment" required>
+          <option value="">Select Payment Method</option>
+          <option value="credit_card">Credit Card</option>
+          <option value="debit_card">Debit Card</option>
+          <option value="paypal">PayPal</option>
+          <option value="cash">Cash</option>
+        </select>
+      </div>
+
+      <div style="margin-top: 15px;">
+        <h3 style="color: #d6336c; text-align: center;">Total Amount: ₹<%=home.Price%></h3>
+      </div>
+
+      <div style="margin-top: 15px;">
+        <button type="submit">Book Now</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>

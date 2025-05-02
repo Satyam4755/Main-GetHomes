@@ -1,0 +1,185 @@
+<%-include('../partials/head')%>
+<%-include('../partials/background')%>
+<style>
+    body {
+        background: linear-gradient(to bottom, #fffde7, #fff9c4);
+        color: #333;
+    }
+    header, nav {
+        margin-bottom: 2rem;
+    }
+
+    h1, h2 {
+        text-align: center;
+        margin-bottom: 10px;
+        color: #ff5a5f;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 2rem;
+        margin-bottom: 1rem;
+    }
+
+    #addHomes {
+        background: linear-gradient(45deg, #ff5a5f, #ff7e7e);
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease-in-out;
+    }
+
+    #addHomes:hover {
+        background: linear-gradient(45deg, #e0484d, #ff5a5f);
+        transform: scale(1.1);
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .cards-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 1rem;
+        gap: 1.5rem;
+    }
+
+    .card {
+        background: linear-gradient(to bottom, #ffffff, #f7f7f7);
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        width: 280px;
+        padding: 1rem;
+        position: relative;
+        transition: transform 0.3s, box-shadow 0.3s;
+        overflow: hidden;
+    }
+
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .card img {
+        width: 100%;
+        aspect-ratio: 16/9;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        margin-top: 20px;
+        transition: transform 0.3s;
+    }
+
+    .card:hover img {
+        transform: scale(1.05);
+    }
+
+    .card h3 {
+        margin: 5px 0;
+        font-size: 1.3rem;
+        color: #ff5a5f;
+    }
+
+    .card p {
+        margin: 4px 0;
+        font-size: 0.95rem;
+        color: #555;
+    }
+
+    .card form,
+    .card a {
+        display: inline-block;
+        margin-right: 6px;
+    }
+
+    .card button {
+        background: none;
+        border: none;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .card button:hover {
+        transform: scale(1.2);
+    }
+
+    .description-scroll {
+        height: 40px;
+        overflow-y: auto;
+        padding-right: 4px;
+    }
+
+    .card p strong {
+        color: #333;
+    }
+
+    .card p .stars {
+        color: #ffcc00;
+        font-size: 1.1rem;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .card {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+</style>
+
+<%-include('../partials/nav')%>
+
+<div class="top-bar">
+    <div>
+        <h1>Welcome Admin!</h1>
+        <h2>Here are the list of homes you have submitted:</h2>
+    </div>
+    <a href="/host/addHomes">
+        <button id="addHomes">🌸 Add New Home</button>
+    </a>
+</div>
+
+<div class="cards-container">
+    <% homes.forEach(home => { %>
+        <div class="card">
+            <div style="position: absolute; top: 10px; right: 10px;">
+                <a href="/host/edit_home/<%=home._id%>?editing=true" title="Edit">
+                    <button type="button">✍️</button>
+                </a>
+                <form action="/host/delete_home/<%=home._id%>" method="post" style="display:inline;">
+                    <input type="hidden" name="id" value="<%=home._id%>">
+                    <button type="submit" title="Delete">🗑️</button>
+                </form>
+            </div>
+            <img src="<%= home.image %>" alt="Home Image">
+            <h3><%= home.Name %></h3>
+            <p><strong>Type:</strong> <%= home.Type %></p>
+            <p><strong>Price per night:</strong> ₹<%= home.Price %></p>
+            <p><strong>Location:</strong> <%= home.Location %></p>
+            <p><strong>Ratings:</strong>
+                <span class="stars">
+                    <% for(let i = 1; i <= home.Rating; i++) { %>⭐<% } %>
+                </span>
+            </p>
+            <p class="description-scroll"><strong>Description:</strong> <%= home.Description %></p>
+            <p><a href="<%= home.rules %>"><strong>List of Rules</strong></a></p>
+        </div>
+    <% }) %>
+</div>
+</body>
+</html>

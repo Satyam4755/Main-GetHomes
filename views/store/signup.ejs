@@ -1,0 +1,173 @@
+<%- include('../partials/head') %>
+<style>
+    .form-container {
+        background: linear-gradient(135deg, #ffffff, #d4e0f5);
+        padding: 2rem;
+        border-radius: 1.5rem;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        width: 520px;
+        margin: 30px auto;
+        border: 1px solid #e0e0e0;
+    }
+
+    .form-container h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: #2a5298;
+        font-family: 'Arial', sans-serif;
+        font-size: 1.6rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .form-container .input-group {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    .form-container .input-group input,
+    .form-container .input-group select {
+        width: 100%;
+        padding: 12px 10px;
+        border: 2px solid #ccc;
+        border-radius: 0.65rem;
+        outline: none;
+        font-size: 0.95rem;
+        transition: border-color 0.3s, box-shadow 0.3s;
+        background: #f9f9f9;
+    }
+
+    .form-container .input-group input:focus,
+    .form-container .input-group select:focus {
+        border-color: #2a5298;
+        box-shadow: 0 0 8px #2a5298;
+        background: #ffffff;
+    }
+
+    .form-container .input-group label {
+        position: absolute;
+        top: 50%;
+        left: 10px;
+        transform: translateY(-50%);
+        color: #aaa;
+        font-size: 0.95rem;
+        pointer-events: none;
+        transition: all 0.3s ease;
+        background: #f9f9f9;
+        padding: 0 5px;
+        border-radius: 0.25rem;
+    }
+
+    .form-container .input-group input:focus + label,
+    .form-container .input-group input:valid + label,
+    .form-container .input-group select:focus + label {
+        top: -12px;
+        font-size: 0.75rem;
+        color: #2a5298;
+        background: #ffffff;
+    }
+
+    .form-container button {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #2a5298, #1e3c72);
+        color: #fff;
+        border: none;
+        border-radius: 0.65rem;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+        font-family: 'Arial', sans-serif;
+        text-transform: uppercase;
+    }
+
+    .form-container button:hover {
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        transform: scale(1.05);
+    }
+
+    .form-container .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+        color: #333;
+    }
+
+    .login-link {
+        text-align: center;
+        margin-top: 1rem;
+    }
+
+    .login-link a {
+        color: #2a5298;
+        text-decoration: none;
+        font-size: 0.95rem;
+        font-family: 'Arial', sans-serif;
+        transition: all 0.3s ease;
+    }
+
+    .login-link a:hover {
+        color: #fff;
+        background-color: #2a5298;
+        padding: 6px 12px;
+        border-radius: 8px;
+    }
+</style>
+
+<body>
+    <div class="form-container">
+        <h2>Sign Up</h2>
+        <form action="/signUP" method="post">
+            <%-include('../partials/errorHandel')%>
+            
+
+            <div class="input-group">
+                <input type="text" id="firstName" name="firstName" value="<%= oldInput.firstName?oldInput.firstName:''%>" required  >
+                <label for="firstName">First Name</label>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="lastName" name="lastName"value="<%= oldInput.lastName?oldInput.lastName:''%>"  required  >
+                <label for="lastName">Last Name</label>
+            </div>
+
+            <div class="input-group">
+                <input type="email" id="email" name="email" value="<%= oldInput.email?oldInput.email:''%>" required   >
+                <label for="email">Email</label>
+            </div>
+
+            <div class="input-group">
+                <input type="password" id="password" name="password" minlength="6" value="<%= oldInput.password?oldInput.password:''%>"  required  >
+                <label for="password">Password</label>
+            </div>
+
+            <div class="input-group">
+                <input type="password" id="confirmPassword" name="confirmPassword" required minlength="6" >
+                <label for="confirmPassword">Confirm Password</label>
+            </div>
+
+            <div class="input-group">
+                <select id="userType" name="userType" required>
+                    <option value="" disabled <%= (typeof oldInput === 'undefined' || !oldInput.userType ? 'selected' : '') %>>userType</option>
+                    <option value="guest" <%= (typeof oldInput !== 'undefined' && oldInput.userType === 'guest' ? 'selected' : '') %>>Guest</option>
+                    <option value="host" <%= (typeof oldInput !== 'undefined' && oldInput.userType === 'host' ? 'selected' : '') %>>Host</option>
+                </select>
+                <!-- <label for="userType">User Type</label> -->
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="terms" name="terms" required >
+                <label for="terms">I agree to the <a href="#">terms and conditions</a></label>
+            </div>
+
+            <button type="submit">Create Account</button>
+        </form>
+
+        <div class="login-link">
+            Already have an account? <a href="/login"><b>Log In</b></a>
+        </div>
+    </div>
+</body>
+</html>

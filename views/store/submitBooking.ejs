@@ -1,0 +1,86 @@
+<%-include('../partials/head')%>
+
+<style>
+    body {
+        background-color: #f9f9f9;
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    h1, h2 {
+        animation: fadeIn 1.5s ease-in-out;
+    }
+
+    h1 {
+        color: #28a745;
+        text-align: center;
+        font-size: 2.5em;
+        margin-top: 20px;
+    }
+
+    h2 {
+        color: #007bff;
+        text-align: center;
+        font-size: 2em;
+        margin-top: 10px;
+    }
+
+    button {
+        background-color: #dc3545;
+        color: white;
+        padding: 15px 30px;
+        border: none;
+        border-radius: 5px;
+        font-size: 1.2em;
+        cursor: pointer;
+        transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: rgb(7, 214, 7);
+        color: black;
+        transform: scale(1.1);
+    }
+
+    .button-container {
+        text-align: center;
+        margin-top: 20px;
+        animation: slideIn 1.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateY(50px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+</style>
+
+<body>
+    <h1>Payment Successfully Completed</h1>
+    <h2>Your Home is Now Booked</h2>
+    <h2>Thanks for Booking!</h2>
+    <h2>You Can Check Your Booking Details in the Reserve Section</h2>
+    <div class="button-container">
+        <a href="/user/reserve">
+            <button>
+                Go to Reserve Section
+            </button>
+        </a>
+    </div>
+</body>
+</html>
