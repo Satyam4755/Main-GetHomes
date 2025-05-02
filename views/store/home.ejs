@@ -199,8 +199,9 @@
 </style>
 
 <%- include('../partials/nav') %>
-
-<h1>Welcome to the Home Page</h1>
+<h2 style="color: #ba0a0a; text-align: center; margin-top: 40px;font-family:Georgia, 'Times New Roman', Times, serif; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); animation: fadeInDown 1s ease-in-out;">
+    Welcome <%= user.firstName %>! 💖
+</h2>
 
 <div class="cards-container">
     <% homes.forEach(home => { %>
@@ -242,12 +243,12 @@
     <% }) %>
 </div>
 
-<h2>Airbnb: Revolutionizing Hospitality</h2>
+<h2>About My Project</h2>
 
 <h3>
-    Airbnb, founded in 2008 by Brian Chesky, Joe Gebbia, and Nathan Blecharczyk, has transformed the global travel and hospitality industry.
-    It operates as an online marketplace connecting travelers with unique accommodations offered by hosts worldwide. What began as a platform
-    for renting air mattresses in San Francisco has evolved into a multi-billion-dollar enterprise spanning over 220 countries and regions.
+    🏡 STAYNEST is a dynamic home-listing platform where multiple hosts can easily add, edit, and manage their own properties. It features secure host control 🔐, image & PDF uploads via Cloudinary 📸📄, and a smooth, user-friendly interface for exploring unique stays 🌍✨.
+
+Built with the MERN stack ⚙️ (MongoDB, Express.js, React.js, Node.js), this project reflects my journey from mastering the basics to building a real-world, full-stack application—turning code into an impactful experience 🚀💻.
 </h3>
 
 </body>
