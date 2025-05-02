@@ -1,34 +1,39 @@
 document.getElementById('homeForm').addEventListener('submit', function (e) {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault();
 
-    // Show the loading spinner
-    document.getElementById('loadingSpinner').style.display = 'block';
+    const spinner = document.getElementById('loadingSpinner');
+    spinner.style.display = 'block';
 
-    // Create FormData object to submit the form data
     const formData = new FormData(this);
 
-    // Submit the form using fetch
-    fetch(this.action, {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json()) // Expecting JSON response from the server
-    .then(data => {
-        // Hide the loading spinner
-        document.getElementById('loadingSpinner').style.display = 'none';
+    setTimeout(() => {
+        fetch(this.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(async response => {
+            spinner.style.display = 'none';
 
-        if (data.success) {
-            // You can show a success message or redirect the user
-            alert('Home added/updated successfully!');
-            window.location.href = '/host/admin_HomeList'; // Optional: Redirect to the home list
-        } else {
-            // Show an error message if something went wrong
-            alert('Error: ' + data.message);
-        }
-    })
-    .catch(error => {
-        // Hide the loading spinner and show an error
-        document.getElementById('loadingSpinner').style.display = 'none';
-        alert('An error occurred during submission: ' + error.message);
-    });
+            // Handle if not JSON
+            const contentType = response.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+                const text = await response.text();
+                throw new Error("Expected JSON but got: " + text.slice(0, 100));
+            }
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert('Home added/updated successfully!');
+                window.location.href = '/host/admin_HomeList'; // <-- this line should work now
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            spinner.style.display = 'none';
+            alert('An error occurred: ' + error.message);
+            console.error(error);
+        });
+    }, 5000);
 });
