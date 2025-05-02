@@ -65,6 +65,9 @@ exports.postAddHome = async (req, res) => {
     const { id, Name, Type, Price, Location, Description, Rating } = req.body;
     const files = req.files;
 
+    // Show spinner when the request is being processed
+    res.locals.showSpinner = true;
+
     if (!files || !files.image || !files.rules) {
         console.log("One or more required files are missing or not valid");
         return res.redirect('/host/addHomes');
@@ -73,10 +76,11 @@ exports.postAddHome = async (req, res) => {
     let imageResult, pdfResult;
 
     try {
-        // ✅ Use buffer instead of file path
+        // Use buffer instead of file path
         const imageBuffer = files.image[0].buffer;
         const pdfBuffer = files.rules[0].buffer;
 
+        // Call Cloudinary to upload files
         imageResult = await fileUploadInCloudinary(imageBuffer);
         pdfResult = await fileUploadInCloudinary(pdfBuffer, { resource_type: 'raw' });
 
@@ -104,6 +108,9 @@ exports.postAddHome = async (req, res) => {
     } catch (err) {
         console.log("Error during home upload:", err.message);
         res.redirect('/host/addHomes');
+    } finally {
+        // Hide spinner when done
+        res.locals.showSpinner = false;
     }
 };
 
