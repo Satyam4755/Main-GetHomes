@@ -128,17 +128,16 @@
         .cards-container {
             flex-direction: column;
             align-items: center;
+            /* width: 85%; */
         }
 
         .card {
-            width: 90%;
+            width: 100%;
         }
     }
 </style>
 <%-include('../partials/nav')%>
 
-<h1>Welcome <%=user.firstName%>! 💖</h1>
-<h2>Here are your favourite dreamy homes 🌈</h2>
 
 <div class="cards-container">
     <% homes.forEach(home => { %>
