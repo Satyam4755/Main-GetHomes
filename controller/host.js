@@ -70,14 +70,15 @@ exports.postAddHome = async (req, res) => {
         return res.redirect('/host/addHomes');
     }
 
-    const imageFilePath = files.image[0].path;
-    const pdfFilePath = files.rules[0].path;
-
     let imageResult, pdfResult;
 
     try {
-        imageResult = await fileUploadInCloudinary(imageFilePath);
-        pdfResult = await fileUploadInCloudinary(pdfFilePath, { resource_type: 'raw' });
+        // ✅ Use buffer instead of file path
+        const imageBuffer = files.image[0].buffer;
+        const pdfBuffer = files.rules[0].buffer;
+
+        imageResult = await fileUploadInCloudinary(imageBuffer);
+        pdfResult = await fileUploadInCloudinary(pdfBuffer, { resource_type: 'raw' });
 
         if (!imageResult?.secure_url || !pdfResult?.secure_url) {
             throw new Error("Cloudinary upload failed");
@@ -86,9 +87,9 @@ exports.postAddHome = async (req, res) => {
         const Home = new homes({
             id,
             image: imageResult.secure_url,
-            imagePublicId: imageResult.public_id, // ✅ Save public ID
+            imagePublicId: imageResult.public_id,
             rules: pdfResult.secure_url,
-            rulesPublicId: pdfResult.public_id,   // ✅ Save public ID
+            rulesPublicId: pdfResult.public_id,
             Name,
             Type,
             Price,
@@ -103,70 +104,62 @@ exports.postAddHome = async (req, res) => {
     } catch (err) {
         console.log("Error during home upload:", err.message);
         res.redirect('/host/addHomes');
-    } finally {
-        try { if (imageFilePath) await fsPromises.unlink(imageFilePath); } catch (err) {
-            console.log("Failed to delete image:", err.message);
-        }
-        try { if (pdfFilePath) await fsPromises.unlink(pdfFilePath); } catch (err) {
-            console.log("Failed to delete PDF:", err.message);
-        }
     }
 };
 
 // Post edit home
 
 exports.PosteditHome = async (req, res) => {
-    const {Name, Type, Price, Location, Description, Rating } = req.body;
-    const homeId =req.body.id;
-    const files=req.files;
+    const { Name, Type, Price, Location, Description, Rating } = req.body;
+    const homeId = req.body.id;
+    const files = req.files;
 
     try {
         const home = await homes.findById(homeId);
         if (!home || home.host.toString() !== req.session.user._id.toString()) {
-            console.log("unauthorized");
-            return res.status(403).send("<h1>unauthorized</h1>");
+            console.log("Unauthorized");
+            return res.status(403).send("<h1>Unauthorized</h1>");
         }
 
-        // Handle image update
-        // IMAGE update
-if (files && files.image) {
-    if (home.imagePublicId) {
-        await cloudinary.uploader.destroy(home.imagePublicId).catch(err => {
-            console.log("Error while deleting image from Cloudinary:", err.message);
-        });
-    }
+        // ✅ IMAGE update
+        if (files && files.image) {
+            if (home.imagePublicId) {
+                await cloudinary.uploader.destroy(home.imagePublicId).catch(err => {
+                    console.log("Error while deleting image from Cloudinary:", err.message);
+                });
+            }
 
-    const imageLocalPath = files.image[0].path;
-    const imageResult = await fileUploadInCloudinary(imageLocalPath);
+            const imageBuffer = files.image[0].buffer;
+            const imageResult = await fileUploadInCloudinary(imageBuffer);
 
-    if (!imageResult?.secure_url) {
-        throw new Error("Image upload failed");
-    }
+            if (!imageResult?.secure_url) {
+                throw new Error("Image upload failed");
+            }
 
-    home.image = imageResult.secure_url;
-    home.imagePublicId = imageResult.public_id; // ✅ update public ID
-}
+            home.image = imageResult.secure_url;
+            home.imagePublicId = imageResult.public_id;
+        }
 
-// PDF update
-if (files && files.rules) {
-    if (home.rulesPublicId) {
-        await cloudinary.uploader.destroy(home.rulesPublicId, { resource_type: 'raw' }).catch(err => {
-            console.log("Error while deleting PDF from Cloudinary:", err.message);
-        });
-    }
+        // ✅ PDF update
+        if (files && files.rules) {
+            if (home.rulesPublicId) {
+                await cloudinary.uploader.destroy(home.rulesPublicId, { resource_type: 'raw' }).catch(err => {
+                    console.log("Error while deleting PDF from Cloudinary:", err.message);
+                });
+            }
 
-    const pdfLocalPath = files.rules[0].path;
-    const pdfResult = await fileUploadInCloudinary(pdfLocalPath, { resource_type: 'raw' });
+            const pdfBuffer = files.rules[0].buffer;
+            const pdfResult = await fileUploadInCloudinary(pdfBuffer, { resource_type: 'raw' });
 
-    if (!pdfResult?.secure_url) {
-        throw new Error("PDF upload failed");
-    }
+            if (!pdfResult?.secure_url) {
+                throw new Error("PDF upload failed");
+            }
 
-    home.rules = pdfResult.secure_url;
-    home.rulesPublicId = pdfResult.public_id; // ✅ update public ID
-}
-        // Update other fields
+            home.rules = pdfResult.secure_url;
+            home.rulesPublicId = pdfResult.public_id;
+        }
 
+        // ✅ Update other fields
         home.Name = Name;
         home.Type = Type;
         home.Price = Price;
