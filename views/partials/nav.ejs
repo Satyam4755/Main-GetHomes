@@ -1,153 +1,255 @@
-<!-- HEADER NAVBAR WITH AIRBNB THEME -->
-<style>
-    header {
-        background: #fff;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        font-family: 'Arial', sans-serif;
+<%- include('../partials/head') %>
+
+<%-include('../partials/background')%>
+<style> 
+    h1 {
+        text-align: center;
+        margin-top: 40px;
+        color: #2c3e50;
+        font-size: 36px;
+        animation: fadeInDown 0.8s ease forwards;
     }
 
-    .navbar {
-        max-width: 1200px;
-        margin: auto;
-        padding: 1rem 2rem;
+    .cards-container {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    
-    .logo,#logo {
-        font-weight: bold;
-        font-size: 1.5rem;
-        text-decoration: none;
-    }
-    .logo{
-        color: #ff385c;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 30px;
+        padding: 40px 20px;
     }
 
-    .nav-links {
-        display: flex;
-        gap: 1.2rem;
-        align-items: center;
+    .card {
+        background: white;
+        border-radius: 18px;
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        width: 260px;
+        position: relative;
+        animation: floatUp 0.7s ease forwards;
+    }
+    .card img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+.card img:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+    .card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.15);
     }
 
-    .nav-links a {
-        text-decoration: none;
-        color: #222;
-        padding: 8px 14px;
-        border-radius: 20px;
-        transition: background 0.2s ease, color 0.2s ease;
+    .card img {
+        width: 100%;
+        aspect-ratio: 16/9;
+        object-fit: cover;
+        transition: 0.3s ease;
     }
 
-    .nav-links a:hover,
-    .nav-right a:hover,
-    .nav-links a.selected,
-    .nav-right a.selected {
-        background: #f7f7f7;
-        color: #ff385c;
+    .card img:hover {
+        filter: brightness(1.05);
     }
 
-    .nav-right {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
+    .content {
+        padding: 16px;
+        animation: fadeInUp 0.8s ease forwards;
     }
-    .nav-right a.host-btn {
-        background: #f7f7f7;
-        color: #ff385c;
+
+    .card h3 {
+        margin: 10px 0 6px;
+        color: #34495e;
+        font-size: 18px;
     }
-    #host-btn {
-        color: red;
-        padding: 8px 14px;
-        border-radius: 20px;
+
+    .card p {
+        margin: 4px 0;
+        color: #666;
+        font-size: 14px;
+    }
+
+    .reserve {
+        background-color: #e67e22;
+        color: white;
         border: none;
-        background-color: #fff;
-        font-size: 0.9rem;
+        border-radius: 6px;
+        padding: 9px 16px;
+        margin-top: 10px;
+        font-size: 14px;
         cursor: pointer;
+        transition: 0.3s ease;
+        box-shadow: 0 4px 12px rgba(230, 126, 34, 0.4);
+    }
+
+    .reserve:hover {
+        background-color: #d35400;
+        transform: scale(1.05);
+        box-shadow: 0 6px 16px rgba(211, 84, 0, 0.5);
+    }
+
+    .fav-btn {
+        float: right;
+        margin-top: -30px;
+        animation: fadeIn 1s ease;
+    }
+
+    .fav-btn img {
+        width: 26px;
+        height: 26px;
+        transition: all 0.3s ease;
+        border-radius: 50%;
+    }
+
+    #favImg1 {
+        filter: grayscale(1);
+    }
+
+    #favImg1:hover,
+    #favImg2:hover {
+        filter: grayscale(0);
+        transform: scale(1.1);
+        box-shadow: 0 0 6px red;
+    }
+
+    h2 {
+        text-align: center;
+        color: #1abc9c;
+        margin-top: 50px;
+        font-size: 24px;
+        animation: fadeInUp 0.8s ease forwards;
+    }
+
+    h3 {
+        color: #555;
+        text-align: justify;
+        margin: 20px 40px;
+        font-weight: 400;
+        line-height: 1.6;
+        animation: fadeInUp 1s ease forwards;
+    }
+
+    a {
         text-decoration: none;
-        transition: background 0.3s ease;
-    }
-
-    #host-btn:hover {
-        background-color: #f7f7f7;
-        color:#ff385c
-    }
-
-    .user-menu {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 6px 10px;
-        border: 1px solid #ccc;
-        border-radius: 20px;
-        cursor: pointer;
-        transition: box-shadow 0.3s ease;
-    }
-
-    .user-menu:hover {
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .hamburger {
-        display: none;
-        font-size: 1.5rem;
-        cursor: pointer;
+        color: inherit;
     }
 
     @media (max-width: 768px) {
-        .nav-links {
-            display: none;
+        .card {
+            width: 80%;
         }
 
-        .hamburger {
-            display: block;
+        .cards-container {
+            padding: 20px 10px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .card {
+            width: 90%;
+        }
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes floatUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
         }
     }
 </style>
 
-<header>
-    <nav class="navbar">
-        <!-- Brand Logo -->
-        <a href="/" class="logo">StayNest</a>
-    
-        <!-- Navigation Links -->
-        <div class="nav-links">
-            <% if (isLogedIn) { %>
-                <% if (user && user.userType==='guest') { %>
-                    <a href="/" id="logo" class="<%= currentPage === 'home' ? 'selected' : '' %>"><strong>Home</strong></a>
-                    <a href="/user/favourite_list" class="<%= currentPage === 'favourite' ? 'selected' : '' %>">Favorites</a>
-                    <a href="/user/reserve" class="<%= currentPage === 'reserve' ? 'selected' : '' %>">Trips</a>
-                <% } else if (user && user.userType==='host') { %>
-                    <a href="/host/addHomes" class="<%= currentPage === 'admin' ? 'selected' : '' %>">Add Your Home</a>
-                    <a href="/host/admin_HomeList" class="<%= currentPage === 'adminHome' ? 'selected' : '' %>">My Homes</a>
-                <% } %>
-            <% } %>
-        </div>
-    
-        <!-- Right Side -->
-        <div class="nav-right">
-            <% if (isLogedIn) { %>
-                <% if (user && user.userType==='guest') { %>
-                    <a href="/login" id="host-btn" class="<%= currentPage === 'logIn' ? 'selected' : '' %>">Logout</a>
-                    <b class="user-menu"><%= user.firstName %></b>
-                <% } else if (user && user.userType==='host') { %>
-                    <a href="/login"id="host-btn" class="host-btn" type="submit">Logout</a>
-                    <div class="user-menu">
-                        <i class="fas fa-user-circle"></i>
-                        <span><%= user.firstName %></span>
-                    </div>
-                <% } %>
-            <% } else { %>
-                <a href="/logIn" id="host-btn" class="<%= currentPage === 'logIn' ? 'selected' : '' %>">Log In</a>
-            <% } %>
-            <div class="hamburger">
-                <i class="fas fa-bars"></i>
-            </div>
-        </div>
-    </nav>
-</header>
+<%- include('../partials/nav') %>
+<h2 style="color: #ba0a0a; text-align: center; margin-top: 40px;font-family:Georgia, 'Times New Roman', Times, serif; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); animation: fadeInDown 1s ease-in-out;">
+    Welcome <%= user.firstName %>! 💖
+</h2>
 
-<!-- FontAwesome for icons -->
-<script src="https://kit.fontawesome.com/your-kit-code.js" crossorigin="anonymous"></script>
+<div class="cards-container">
+    <% homes.forEach(home => { %>
+        <div class="card">
+            <a href="/user/home-list/<%=home._id%>">
+                <img src="<%= home.image %>" alt="Home Image">
+                <div class="content">
+                    <h3><%= home.Name %></h3>
+                    <p><strong>Type:</strong> <%= home.Type %></p>
+                    <p><strong>Price:</strong> ₹<%= home.Price %></p>
+                    <p><strong>Location:</strong> <%= home.Location %></p>
+                    <p><strong>Ratings:</strong> <% for(let i=1;i<=home.Rating;i++){%>⭐<% } %></p>
+
+                    <% if (showOptions) { %>
+                        <a href="/user/booking/<%=home._id%>">
+                            <button class="reserve">RESERVE</button>
+                        </a>
+
+                        <form action="/user/favourite_list" method="post" class="fav-btn">
+                            <input type="hidden" name="homeId" value="<%= home._id %>">
+                            <% if(opacity[home._id] == 10) { %>
+                                <button type="submit" style="background: none; border: none;">
+                                    <img id="favImg2" src="/pngtree-red-3d-heart-emoji-realistic-shadow-png-image_4539964.png" alt="Favourite">
+                                </button>
+                            <% } else { %>
+                                <button type="submit" style="background: none; border: none;">
+                                    <img id="favImg1" src="/pngtree-red-3d-heart-emoji-realistic-shadow-png-image_4539964.png" alt="Favourite">
+                                </button>
+                            <% } %>
+                        </form>
+                    <% } else if (!isLogedIn) { %>
+                        <a href="/logIn">
+                            <button class="reserve">RESERVE</button>
+                        </a>
+                    <% } %>
+                </div>
+            </a>
+        </div>
+    <% }) %>
+</div>
+
+<h2>About My Project</h2>
+
+<h3>
+    🏡 STAYNEST is a dynamic home-listing platform where multiple hosts can easily add, edit, and manage their own properties. It features secure host control 🔐, image & PDF uploads via Cloudinary 📸📄, and a smooth, user-friendly interface for exploring unique stays 🌍✨.
+
+Built with the MERN stack ⚙️ (MongoDB, Express.js, React.js, Node.js), this project reflects my journey from mastering the basics to building a real-world, full-stack application—turning code into an impactful experience 🚀💻.
+</h3>
+
+</body>
+</html>
