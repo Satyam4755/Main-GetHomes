@@ -29,7 +29,16 @@ const userSchema=mongoose.Schema({
     reserved:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Home'
-    }]
+    }],
+    orders: [{
+        guest: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        home: { type: mongoose.Schema.Types.ObjectId, ref: 'Home' },
+        name: String,
+        phone: Number,
+        checkin: String,
+        checkout: String,
+        payment: String
+      }]
 })
 
 module.exports=mongoose.model('User',userSchema,'user')//---->model name, schema name, collection name;
