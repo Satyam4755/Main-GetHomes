@@ -181,22 +181,18 @@
                 <a href="/user/booking/<%= home._id %>">
                     <button class="btn">Reserve Now</button>
                 </a>
-
-                <form action="/user/favourite_list" method="post" class="fav-btn">
-                    <input type="hidden" name="homeId" value="<%= home._id %>">
                     <form action="/user/favourite_list" method="post" class="fav-btn">
                         <input type="hidden" name="homeId" value="<%= home._id %>">
                         <% if(opacity[home._id] == 10) { %>
                             <button type="submit" style="background: none; border: none;">
-                                <img id="favImg2" style=" border-radius: 15px;" src="/pngtree-red-3d-heart-emoji-realistic-shadow-png-image_4539964.png" alt="Favourite">
+                                <img id="favImg2" src="/pngtree-red-3d-heart-emoji-realistic-shadow-png-image_4539964.png" alt="Favourite">
                             </button>
                         <% } else { %>
                             <button type="submit" style="background: none; border: none;">
-                                <img id="favImg1" style=" border-radius: 15px;" src="/pngtree-red-3d-heart-emoji-realistic-shadow-png-image_4539964.png" alt="Favourite">
+                                <img id="favImg1" src="/pngtree-red-3d-heart-emoji-realistic-shadow-png-image_4539964.png" alt="Favourite">
                             </button>
                         <% } %>
                     </form>
-                </form>
             <% } else if (!isLogedIn) { %>
                 <a href="/logIn">
                     <button class="btn">Login to Reserve</button>
