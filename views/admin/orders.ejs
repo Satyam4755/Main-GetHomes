@@ -1,0 +1,95 @@
+<%- include('../partials/head') %>
+<%- include('../partials/background') %>
+
+<style>
+  .container {
+    max-width: 1000px;
+    margin: auto;
+    margin-top: 100px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+    font-weight: 600;
+    font-size: 32px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow-x: auto;
+  }
+
+  thead {
+    background-color: #343a40;
+    color: #fff;
+  }
+
+  th, td {
+    padding: 14px 18px;
+    text-align: center;
+    font-size: 16px;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f7f7f7;
+  }
+
+  tr:hover {
+    background-color: #e9f5ff;
+    transition: background-color 0.3s ease;
+  }
+
+  td {
+    color: #444;
+  }
+
+  p {
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+    margin-top: 20px;
+  }
+</style>
+<%- include('../partials/nav') %>
+
+<div class="container">
+  <h1>Guest Orders</h1>
+  
+  <% if (orders.length === 0) { %>
+    <p>No orders yet.</p>
+  <% } else { %>
+    <table>
+      <thead>
+        <tr>
+          <th>Home</th>
+          <th>Guest Name</th>
+          <th>Phone</th>
+          <th>Check-in / Check-out</th>
+          <th>Payment</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% orders.forEach(order => { %>
+          <tr>
+            <td><%= order.home?.Name || 'Deleted Home' %></td>
+            <td><%= order.name || 'Unknown Guest' %></td>
+            <td><%= order.phone %></td>
+            <td><%= order.checkin %> to <%= order.checkout %></td>
+            <td><%= order.payment %></td>
+            <td><%= order.guest?.email || 'Email' %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+</div>
+</body>
+</html>
