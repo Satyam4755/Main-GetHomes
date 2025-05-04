@@ -2,10 +2,11 @@
 
 <style>
     body {
-        background-color: #f9f9f9;
-        font-family: 'Arial', sans-serif;
+        background: #f4f4f9; /* Light grayish background for a clean look */
+        font-family: 'Poppins', sans-serif;
         margin: 0;
         padding: 0;
+        color: #333; /* Darker text for better readability */
     }
 
     h1, h2 {
@@ -13,39 +14,42 @@
     }
 
     h1 {
-        color: #28a745;
+        color: #4CAF50; /* Green for success */
         text-align: center;
-        font-size: 2.5em;
-        margin-top: 20px;
+        font-size: 3em;
+        margin-top: 40px;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
     }
 
     h2 {
-        color: #007bff;
+        color: #555; /* Subtle gray for secondary text */
         text-align: center;
-        font-size: 2em;
-        margin-top: 10px;
+        font-size: 1.8em;
+        margin-top: 15px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
     }
 
     button {
-        background-color: #dc3545;
+        background: #4CAF50; /* Green button */
         color: white;
-        padding: 15px 30px;
+        padding: 15px 40px;
         border: none;
-        border-radius: 5px;
+        border-radius: 50px;
         font-size: 1.2em;
         cursor: pointer;
-        transition: transform 0.3s ease, background-color 0.3s ease;
+        transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 4px 10px rgba(76, 175, 80, 0.4);
     }
 
     button:hover {
-        background-color: rgb(7, 214, 7);
-        color: black;
+        background: #45a049; /* Slightly darker green on hover */
         transform: scale(1.1);
+        box-shadow: 0 6px 15px rgba(69, 160, 73, 0.5);
     }
 
     .button-container {
         text-align: center;
-        margin-top: 20px;
+        margin-top: 30px;
         animation: slideIn 1.5s ease-in-out;
     }
 
@@ -68,7 +72,11 @@
             opacity: 1;
         }
     }
-</style>
+
+    a {
+        text-decoration: none;
+    }
+</style> 
 
 <body>
     <h1>Payment Successfully Completed</h1>
