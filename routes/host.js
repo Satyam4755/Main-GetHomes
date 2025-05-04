@@ -1,7 +1,7 @@
 const express = require('express');
 const hostRouter = express.Router();
 const upload = require('../middleware/multer'); // Import multer middleware
-const { addHome, adminHomeList, editHome, postAddHome, PosteditHome, deleteHome } = require('../controller/host');
+const { addHome, adminHomeList, editHome, postAddHome, PosteditHome, deleteHome,getOrders } = require('../controller/host');
 
 // GET route for adding homes page
 hostRouter.get('/addHomes', addHome);
@@ -26,5 +26,8 @@ hostRouter.post('/edit_home', upload.fields([
 
 // POST route for deleting a home
 hostRouter.post('/delete_home/:homeId', deleteHome);
+
+// GET route to show orders for the host
+hostRouter.get('/orders', getOrders);
 
 exports.hostRouter = hostRouter;
