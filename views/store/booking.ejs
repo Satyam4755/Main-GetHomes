@@ -200,6 +200,7 @@
 
   <div class="booking-cards-container">
     <form action="/user/submit_booking/<%=home._id%>" method="post">
+      <%-include('../partials/errorHandel')%>
       <h2>Home Booking</h2>
 
       <div>
@@ -209,7 +210,7 @@
 
       <div>
         <label for="phone">Phone Number</label>
-        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" pattern="[0-9]{10}" required>
+        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number (10 digits)" pattern="[0-9]{10}" required>
       </div>
 
       <div>
