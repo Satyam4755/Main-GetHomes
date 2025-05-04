@@ -1,3 +1,4 @@
+const { check } = require('express-validator');
 const homes = require('../models/homes')
 const User = require('../models/user');
 
@@ -103,7 +104,7 @@ exports.postfavouriteList = async (req, res, next) => {
     if (!user.favourites.includes(Id)) {
         user.favourites.push(Id);
     } else {
-        user.favourites.pull(Id);
+        user.favourites.pull(Id); 
     }
 
     await user.save();
@@ -141,21 +142,58 @@ exports.booking = (req, res, next) => {
 };
 
 // POST BOOKING
-exports.Postbooking = async (req, res, next) => {
-    if (!req.isLogedIn || !req.session.user) return res.redirect('/login');
-
-    const Id = req.params.homeId;
-    const user = await User.findById(req.session.user._id);
-
-    if (!user.reserved.includes(Id)) {
-        user.reserved.push(Id);
-    } else {
-        user.reserved.pull(Id);
+exports.Postbooking = [
+    check('phone')
+      .isNumeric()
+      .withMessage('Phone number should be numeric')
+      .isLength({ min: 10, max: 10 })
+      .withMessage('Phone number should be 10 digits long'),
+      
+    async (req, res, next) => {
+      if (!req.isLogedIn || !req.session.user) return res.redirect('/login');
+  
+  
+      const homeId = req.params.homeId;
+      const { name, phone, checkin, checkout, payment } = req.body;
+  
+      try {
+        const guestUser = await User.findById(req.session.user._id);
+        const home = await homes.findById(homeId).populate('host');
+  
+        if (!home) {
+          req.flash('error', 'Home not found');
+          return res.redirect('back');
+        }
+  
+        // Add to guest's reserved list if not already there
+        if (!guestUser.reserved.includes(homeId)) {
+          guestUser.reserved.push(homeId);
+          await guestUser.save();
+        }
+  
+        // Booking info to be sent to the host
+        const booking = {
+          guest: guestUser._id,
+          home: home._id,
+          name,
+          phone,
+          checkin,
+          checkout,
+          payment
+        };
+  
+        const hostUser = await User.findById(home.host);
+        hostUser.orders.push(booking);
+        await hostUser.save();
+  
+        res.redirect('/user/submit_booking');
+      } catch (err) {
+        console.error('Booking Error:', err);
+        req.flash('error', 'Something went wrong during booking');
+        res.redirect('back');
+      }
     }
-
-    await user.save();
-    res.redirect('/user/submit_booking');
-};
+  ];
 
 // SUBMIT BOOKING PAGE
 exports.submitBooking = (req, res, next) => {
