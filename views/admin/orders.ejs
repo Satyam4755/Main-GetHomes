@@ -56,7 +56,73 @@
     color: #666;
     margin-top: 20px;
   }
+
+  /* Mobile responsive styles */
+  @media screen and (max-width: 768px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tr {
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    padding: 15px;
+    background: #f9f9f9;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  tr:hover {
+    background-color: #f0f7ff;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  }
+
+  td {
+    text-align: left;
+    padding: 12px 18px;
+    position: relative;
+    font-size: 16px;
+    border: none;
+    color: #333;
+    background-color: #fff;
+    border-radius: 8px;
+    margin-bottom: 8px;
+  }
+
+  td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 8px;
+    display: block;
+    transition: color 0.3s ease;
+  }
+
+  td:hover::before {
+    color: #007bff;
+  }
+
+  p {
+    font-size: 18px;
+    color: #444;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  /* Add smooth scroll for the table rows */
+  table {
+    -webkit-overflow-scrolling: touch;
+  }
+}
 </style>
+
 <%- include('../partials/nav') %>
 
 <div class="container">
@@ -79,12 +145,12 @@
       <tbody>
         <% orders.forEach(order => { %>
           <tr>
-            <td><%= order.home?.Name || 'Deleted Home' %></td>
-            <td><%= order.name || 'Unknown Guest' %></td>
-            <td><%= order.phone %></td>
-            <td><%= order.checkin %> to <%= order.checkout %></td>
-            <td><%= order.payment %></td>
-            <td><%= order.guest?.email || 'Email' %></td>
+            <td data-label="Home"><%= order.home?.Name || 'Deleted Home' %></td>
+            <td data-label="Guest Name"><%= order.name || 'Unknown Guest' %></td>
+            <td data-label="Phone"><%= order.phone %></td>
+            <td data-label="Check-in / Check-out"><%= order.checkin %> to <%= order.checkout %></td>
+            <td data-label="Payment"><%= order.payment %></td>
+            <td data-label="Email"><%= order.guest?.email || 'Email' %></td>
           </tr>
         <% }) %>
       </tbody>
