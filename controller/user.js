@@ -38,7 +38,7 @@ exports.homePage = async (req, res, next) => {
         opacity: opacity,
         currentPage: 'home',
         isLogedIn: req.isLogedIn,
-        user: req.session.user || null,
+        user:user || null,
         showOptions: showOptions // pass this to the EJS to toggle buttons
     });
 };
@@ -223,12 +223,36 @@ exports.reserved = async (req, res, next) => {
 // UNRESERVE
 exports.Postreserved = async (req, res, next) => {
     if (!req.isLogedIn || !req.session.user) return res.redirect('/login');
-
+  
     const homeId = req.params.homeId;
-    const user = await User.findById(req.session.user._id);
-
-    user.reserved.pull(homeId);
-    await user.save();
-
-    res.redirect('/user/reserve');
-};
+  
+    try {
+      // Remove home from guest's reserved list
+      const user = await User.findById(req.session.user._id);
+      user.reserved.pull(homeId);
+      await user.save();
+  
+      // Find the home to get the host ID
+      const home = await homes.findById(homeId);
+      if (!home) {
+        req.flash('error', 'Home not found');
+        return res.redirect('/user/reserve');
+      }
+  
+      // Remove corresponding order from host's orders
+      await User.findByIdAndUpdate(home.host, {
+        $pull: {
+          orders: {
+            guest: req.session.user._id,
+            home: homeId
+          }
+        }
+      });
+  
+      res.redirect('/user/reserve');
+    } catch (err) {
+      console.error('Error while unreserving home:', err);
+      req.flash('error', 'Something went wrong while unreserving');
+      res.redirect('/user/reserve');
+    }
+  };
