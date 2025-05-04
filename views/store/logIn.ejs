@@ -152,19 +152,19 @@
                 <a href="/signUP"><b>New User</b></a>
             </h4>
         <%}else{%>
-            <h2 style="text-align: center; margin-top: 50px; color: #ff69b4; font-family: 'Comic Sans MS', cursive, sans-serif; font-size: 1.8rem; text-transform: uppercase; letter-spacing: 1px;">
+            <h2 style="text-align: center; margin-top: 50px; color: #ff69b4;font-size: 1.8rem; text-transform: uppercase; letter-spacing: 1px;">
                 You want to log out!
             </h2>
             <div style="text-align: center; margin-top: 20px;">
                 <a href="<%= user.userType === 'guest' ? '/' : '/host/admin_HomeList' %>" 
-                    style="display: inline-block; background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-size: 1rem; font-family: 'Comic Sans MS', cursive, sans-serif; text-transform: uppercase; transition: background 0.3s ease, transform 0.2s ease;">
+                    style="display: inline-block; background: linear-gradient(135deg, #ff69b4, #ff1493); color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-size: 1rem; text-transform: uppercase; transition: background 0.3s ease, transform 0.2s ease;">
                     No! Go back to Home
                 </a>
             </div>
             <div style="text-align: center; margin-top: 20px;">
                 <form action="/logout" method="post">
                     <input type="submit" value="LogOut" 
-                        style="background: linear-gradient(135deg, #ff6f61, #ff4500); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 1rem; font-family: 'Comic Sans MS', cursive, sans-serif; text-transform: uppercase; transition: background 0.3s ease, transform 0.2s ease;">
+                        style="background: linear-gradient(135deg, #ff6f61, #ff4500); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 1rem; text-transform: uppercase; transition: background 0.3s ease, transform 0.2s ease;">
                 </form>
             </div>
         <%}%>
