@@ -3,6 +3,7 @@ const homes = require('../models/homes');
 const fs = require('fs');
 const fsPromises = require('fs/promises');
 const { fileUploadInCloudinary } = require('../utils/cloudinary');
+const User = require('../models/user');
 
 // host
 exports.hostPage = (req, res, next) => {
@@ -81,7 +82,7 @@ exports.postAddHome = async (req, res) => {
             throw new Error("Cloudinary upload failed");
         }
 
-        const Home = new homes({
+        const Home = new homes({ 
             id,
             image: imageResult.secure_url,
             imagePublicId: imageResult.public_id,
@@ -206,4 +207,26 @@ exports.deleteHome = async (req, res, next) => {
         res.redirect('/host/admin_HomeList');
     }
 };
+
+exports.getOrders = async (req, res, next) => {
+    if (!req.isLogedIn || !req.session.user) return res.redirect('/login');
+  
+    try {
+      const host = await User.findById(req.session.user._id)
+        .populate('orders.guest', 'email') // Populate guest details (only name/email)
+        .populate('orders.home', 'Name Location'); // Populate home details (optional fields)
+  
+      res.render('./admin/orders', {
+        title: "Orders",
+        isLogedIn: req.isLogedIn,
+        user: req.session.user,
+        orders: host.orders, // Pass orders to the EJS
+        currentPage: 'orders'
+    });
+    } catch (err) {
+      console.error('Error fetching host orders:', err);
+      req.flash('error', 'Could not load orders');
+      res.redirect('back');
+    }
+  };
 
